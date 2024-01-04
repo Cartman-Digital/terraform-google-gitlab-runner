@@ -86,7 +86,7 @@ resource "google_compute_instance" "ci_runner" {
     //}
   }
 
-  tags = var.ci_runner_instance_tags
+  tags = [var.ci_runner_instance_tags]
 
   metadata_startup_script = <<SCRIPT
 set -e
