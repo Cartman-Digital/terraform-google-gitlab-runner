@@ -65,6 +65,11 @@ variable "ci_runner_gitlab_tags" {
     default     = ""
     description = "Register the runner to execute GitLab jobs with these tags."
 }
+variable "ci_runner_instance_tags" {
+  type        = string
+  default     = "gitlab-ci-runner"
+  description = "The GCP instance networking tags to apply."
+}
 
 variable "ci_runner_instance_type" {
   type        = string
