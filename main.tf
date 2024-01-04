@@ -81,10 +81,9 @@ resource "google_compute_instance" "ci_runner" {
     network    = var.ci_runner_network
     subnetwork = var.ci_runner_subnetwork
 
-
-    access_config {
-      // Ephemeral IP
-    }
+    // no public access
+    //access_config {
+    //}
   }
 
   metadata_startup_script = <<SCRIPT
