@@ -143,7 +143,7 @@ sudo gitlab-runner register -n  \
     --machine-machine-options "google-disk-size=${var.ci_worker_disk_size}" \
     --machine-machine-options "google-tags=${var.ci_worker_instance_tags}" \
     --machine-machine-options "google-use-internal-ip" \
-    --machine-machine-options "google-network=${local.network_name}" \
+    --machine-machine-options "google-network=${var.ci_runner_network}" \
     %{if var.ci_runner_subnetwork != ""}--machine-machine-options "google-subnetwork=${var.ci_runner_subnetwork}"%{endif} \
     %{if var.pre_clone_script != ""}--pre-clone-script ${replace(format("%q", var.pre_clone_script), "$", "\\$")}%{endif} \
     %{if var.post_clone_script != ""}--post-clone-script ${replace(format("%q", var.post_clone_script), "$", "\\$")}%{endif} \
