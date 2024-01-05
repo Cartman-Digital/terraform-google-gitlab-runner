@@ -18,6 +18,8 @@
 # can be overridden if desired.
 locals {
   ci_runner_gitlab_name_final = (var.ci_runner_gitlab_name != "" ? var.ci_runner_gitlab_name : "gcp-${var.gcp_project}")
+
+  network_name = reverse(split("/", var.ci_runner_network))[0]
 }
 
 # Service account for the Gitlab CI runner.  It doesn't run builds but it spawns other instances that do.
@@ -73,7 +75,7 @@ resource "google_compute_instance" "ci_runner" {
     initialize_params {
       image = "centos-cloud/centos-7"
       size  = var.ci_runner_disk_size
-      type  = "pd-standard"
+      type  = "pd-balanced"
     }
   }
 
@@ -111,7 +113,7 @@ docker-machine create --driver google \
     --google-machine-image ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20220419 \
     --google-tags ${var.ci_worker_instance_tags} \
     --google-use-internal-ip \
-    --google-network ${var.ci_runner_network} \
+    --google-network ${local.network_name} \
      %{if var.ci_runner_subnetwork != ""}--google-subnetwork ${var.ci_runner_subnetwork}%{endif} \
     ${var.gcp_resource_prefix}-test-machine
 
@@ -141,7 +143,7 @@ sudo gitlab-runner register -n  \
     --machine-machine-options "google-disk-size=${var.ci_worker_disk_size}" \
     --machine-machine-options "google-tags=${var.ci_worker_instance_tags}" \
     --machine-machine-options "google-use-internal-ip" \
-    --machine-machine-options "google-network=${var.ci_runner_network}" \
+    --machine-machine-options "google-network=${local.network_name}" \
     %{if var.ci_runner_subnetwork != ""}--machine-machine-options "google-subnetwork=${var.ci_runner_subnetwork}"%{endif} \
     %{if var.pre_clone_script != ""}--pre-clone-script ${replace(format("%q", var.pre_clone_script), "$", "\\$")}%{endif} \
     %{if var.post_clone_script != ""}--post-clone-script ${replace(format("%q", var.post_clone_script), "$", "\\$")}%{endif} \
