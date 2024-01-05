@@ -113,7 +113,7 @@ docker-machine create --driver google \
     --google-machine-image ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20220419 \
     --google-tags ${var.ci_worker_instance_tags} \
     --google-use-internal-ip \
-    --google-network ${local.network_name} \
+    --google-network ${var.ci_runner_network} \
      %{if var.ci_runner_subnetwork != ""}--google-subnetwork ${var.ci_runner_subnetwork}%{endif} \
     ${var.gcp_resource_prefix}-test-machine
 
